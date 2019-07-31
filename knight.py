@@ -65,8 +65,6 @@ class Knight(piece.Piece):
         elif 64 < self.tile_number + tile_direction  or self.tile_number + tile_direction < 0:
             return
 
-        print(self.tile_number, tile_direction)
-
         if tiles[self.tile_number + tile_direction].is_occupied:
             if tiles[self.tile_number + tile_direction].is_occupied_colour != self.colour:
                 potential_moves.append(self.tile_number + tile_direction)

@@ -16,7 +16,6 @@ CHECKLIST:
     - Draw by 3x reps
 
     - fix the square numbers uce
-    - use execute move method insted u mung
 """
 
 import pygame
@@ -46,6 +45,9 @@ class PyChess():
 
         self.screen = pygame.display.set_mode(window)
         self.tiles = board.draw_board(self.screen)
+
+        self.move_history = []
+        self.en_passent_tiles = []
 
     def event_handler(self):
         """
@@ -84,7 +86,7 @@ class PyChess():
         #BLACK PAWN
         self.init_piece(23, 1, Pawn, BLACK, 'piece_sprite/black_pawn.png', 'black pawn', 0)
         #WHITE PAWN
-        self.init_piece(8, 1, Pawn, WHITE, 'piece_sprite/white_pawn.png', 'white pawn', 0)
+        self.init_piece(64, 1, Pawn, WHITE, 'piece_sprite/white_pawn.png', 'white pawn', 0)
 
     def init_piece(self, tile_num, number_of_pieces, 
     piece_type, colour, image, piece_label, tile_num_change):
@@ -137,8 +139,6 @@ class PyChess():
     def capture_piece(self, captured_piece):
         """
         """
-        # game.tiles[captured_piece.tile_number].is_occupied = False
-        # game.tiles[captured_piece.tile_number].is_occupied_colour = None
         self.piece_list.remove(captured_piece)
 
     def promote_pawn(self, pawn_to_promote):
@@ -181,42 +181,9 @@ if __name__ == '__main__':
                         game.tiles[active_piece.tile_number].is_occupied_colour = None
 
             if event.type == pygame.MOUSEBUTTONUP and drag:
+                active_piece.execute_move(game, pos)
                 drag = False
-                target_square = move_validation.find_closest_tile(game.tiles, pos)
-                if active_piece.valid_move(target_square, game.tiles) == 1:
-                    active_piece.tile_number = target_square.tile_number
-                    movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
-                                         active_piece)
-
-                    active_piece.has_moved = True
-
-                    if active_piece.piece_label == 'black pawn':
-                        if active_piece.tile_number in [tile for tile in range(56, 65)]:
-                            game.promote_pawn(active_piece)
-
-                    elif active_piece.piece_label == 'white pawn':
-                        if active_piece.tile_number in [tile for tile in range(0, 9)]:
-                            game.promote_pawn(active_piece)
-
-                elif active_piece.valid_move(target_square, game.tiles) == 2:
-                    game.capture_piece([piece for piece in game.piece_list if piece.tile_number == target_square.tile_number][0])
-                    active_piece.tile_number = target_square.tile_number
-                    movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
-                                         active_piece)
-                    
-                    active_piece.has_moved = True
-
-                else:
-                    movement.drag_piece((game.tiles[active_piece.tile_number].tile_x + 30,
-                                         game.tiles[active_piece.tile_number].tile_y + 30),
-                                         active_piece)
-
-                game.tiles[active_piece.tile_number].is_occupied = True
-                game.tiles[active_piece.tile_number].is_occupied_colour = active_piece.colour
                 active_piece = None
-                game.update_occupied_squares()
-
-                print(game.occupied_squares)
 
         if drag:
             movement.drag_piece(pos, active_piece)

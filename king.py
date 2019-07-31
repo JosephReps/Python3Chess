@@ -67,7 +67,7 @@ class King(piece.Piece):
         if not self.has_moved:
             self.check_castle(tiles)
 
-    def check_castle(self, tiles):
+    def check_castle(self, tiles, piece_list):
         """
         """
         # if self.colour == (0,0,0):

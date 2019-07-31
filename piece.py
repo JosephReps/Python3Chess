@@ -4,6 +4,7 @@ Basic piece functionality and class for all pieces.
 
 import pygame
 import move_validation
+import movement
 
 class Piece():
     '''
@@ -39,9 +40,9 @@ class Piece():
             Draws a pygame image on screen when called.
         '''
 
-        self.piece_object = screen.blit(self.piece_image, (self.piece_x,self.piece_y))
+        self.piece_object = screen.blit(self.piece_image, (self.piece_x, self.piece_y))
 
-    def execute_move(self, tiles, pos):   
+    def execute_move(self, game, pos):   
         '''
         Executes attempted move, now that it has been validated by the `valid_move`
             method.
@@ -57,18 +58,60 @@ class Piece():
         Returns:
             True if move was valid.
         '''
-        self.has_moved = True
-        print("MOVED", self.has_moved)
-        
-        tiles[self.tile_number].is_occupied = False
-        move_validation.find_closest_tile(tiles,pos).is_occupied = True
-        self.tile_number = move_validation.find_closest_tile(tiles,pos).tile_number
+        target_square = move_validation.find_closest_tile(game.tiles, pos)
+        if self.valid_move(target_square, game.tiles) == 1:
+            
+            try:
+                for each_tile in game.en_passent_tiles:
+                    game.tiles[each_tile].is_occupied = False
+                    game.tiles[each_tile].is_occupied_colour = None
+            except IndexError as e:
+                print(f"ERROR: {e}")
+                print(each_tile)
 
-        # Centers piece on tile
-        self.piece_x = tiles[self.tile_number].tile_x + 25
-        self.piece_y = tiles[self.tile_number].tile_y + 25
+            game.en_passent_tiles = []
 
-        return True
+            if self.piece_label == 'black pawn':
+                if abs(self.tile_number - target_square.tile_number) == 16:
+                    game.en_passent_tiles.append(self.tile_number + 8)
+                    game.tiles[self.tile_number + 8].is_occupied = True
+                    game.tiles[self.tile_number + 8].is_occupied_colour = self.colour
+
+                if target_square.tile_number in [tile for tile in range(56, 65)]:
+                    game.promote_pawn(self)
+
+            elif self.piece_label == 'white pawn':
+                if abs(self.tile_number - target_square.tile_number) == 16:
+                    game.en_passent_tiles.append(self.tile_number + 8)
+                    game.tiles[self.tile_number - 8].is_occupied = True
+                    game.tiles[self.tile_number - 8].is_occupied_colour = self.colour
+
+                if target_square.tile_number in [tile for tile in range(0, 9)]:
+                    game.promote_pawn(self)
+
+            self.tile_number = target_square.tile_number
+            movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
+                                    self)
+
+            self.has_moved = True
+
+        elif self.valid_move(target_square, game.tiles) == 2:
+            game.capture_piece([piece for piece in game.piece_list if piece.tile_number == target_square.tile_number][0])
+            self.tile_number = target_square.tile_number
+            movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
+                                    self)
+            
+            self.has_moved = True
+
+        else:
+            movement.drag_piece((game.tiles[self.tile_number].tile_x + 30,
+                                    game.tiles[self.tile_number].tile_y + 30),
+                                    self)
+
+        game.tiles[self.tile_number].is_occupied = True
+        game.tiles[self.tile_number].is_occupied_colour = self.colour
+        game.update_occupied_squares()
+
 
     def check_tile_direction(self, potential_moves, tile_direction, tiles):
         """

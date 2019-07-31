@@ -63,7 +63,7 @@ class Pawn(piece.Piece):
         elif self.tile_number in left_edge_squares and abs(tile_direction) == 9:
             return
 
-        elif 64 < self.tile_number + tile_direction  or self.tile_number + tile_direction < 0:
+        elif 64 < self.tile_number + tile_direction or self.tile_number + tile_direction < 0:
             return
         
         if abs(tile_direction) == 8:
@@ -74,14 +74,8 @@ class Pawn(piece.Piece):
             if tiles[self.tile_number + tile_direction].is_occupied_colour != self.colour:
                 potential_moves.append(self.tile_number + tile_direction)
 
-
         # self.tile_directions[1] == 8 or -8
         if self.has_moved == False:
             if tiles[self.tile_number + self.tile_directions[1]].is_occupied == False:
                 if tiles[self.tile_number + ((self.tile_directions[1])*2)].is_occupied == False:
                     potential_moves.append(self.tile_number + self.tile_directions[1]*2)
-
-    # def promote_pawn(self, piece_list):
-    #     """
-    #     """
-    #     piece_list[piece_list.index(self)] = Queen()
