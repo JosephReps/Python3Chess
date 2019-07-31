@@ -46,7 +46,7 @@ class Pawn(piece.Piece):
             self.check_tile_direction(potential_moves, tile_direction, tiles)
 
         if target_square.tile_number in potential_moves:
-            if target_square.is_occupied:
+            if target_square.occupant:
                 return 2
             else:
                 return 1
@@ -58,24 +58,29 @@ class Pawn(piece.Piece):
         right_edge_squares = [8, 16, 24, 32, 40, 48, 56, 64]
 
         if self.tile_number in right_edge_squares and abs(tile_direction) == 7:
+            print('1')
             return
         
         elif self.tile_number in left_edge_squares and abs(tile_direction) == 9:
+            print('2')
             return
 
         elif 64 < self.tile_number + tile_direction or self.tile_number + tile_direction < 0:
+            print('3')            
             return
         
         if abs(tile_direction) == 8:
-            if tiles[self.tile_number + tile_direction].is_occupied == False:
+            if not tiles[self.tile_number + tile_direction].occupant:
                 potential_moves.append(self.tile_number + tile_direction)
 
-        elif tiles[self.tile_number + tile_direction].is_occupied:
-            if tiles[self.tile_number + tile_direction].is_occupied_colour != self.colour:
+        elif tiles[self.tile_number + tile_direction].occupant:
+            if tiles[self.tile_number + tile_direction].occupant.colour != self.colour:
                 potential_moves.append(self.tile_number + tile_direction)
 
         # self.tile_directions[1] == 8 or -8
         if self.has_moved == False:
-            if tiles[self.tile_number + self.tile_directions[1]].is_occupied == False:
-                if tiles[self.tile_number + ((self.tile_directions[1])*2)].is_occupied == False:
+            if not tiles[self.tile_number + self.tile_directions[1]].occupant:
+                if not tiles[self.tile_number + ((self.tile_directions[1])*2)].occupant:
                     potential_moves.append(self.tile_number + self.tile_directions[1]*2)
+        
+        print("PAWN POTS:", potential_moves)

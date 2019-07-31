@@ -74,11 +74,11 @@ class PyChess():
         #BLACK BISHOP
         self.init_piece(2, 2, Bishop, BLACK, 'piece_sprite/black_bishop.png', 'black bishop', 4)
         #WHITE ROOK
-        self.init_piece(64, 1, Rook, WHITE, 'piece_sprite/white_rook.png', 'white rook', -4)
+        self.init_piece(57, 1, Rook, WHITE, 'piece_sprite/white_rook.png', 'white rook', -4)
         #BLACK ROOK
         self.init_piece(5, 2, Rook, BLACK, 'piece_sprite/black_rook.png', 'black rook', 4)
         #WHITE KING
-        self.init_piece(60, 1, King, WHITE, 'piece_sprite/white_king.png', 'white king', 0)
+        self.init_piece(61, 1, King, WHITE, 'piece_sprite/white_king.png', 'white king', 0)
         #WHITE KNIGHT
         self.init_piece(40, 1, Knight, WHITE, 'piece_sprite/white_knight.png', 'white knight', 0)
         #BLACK KNIGHT
@@ -114,8 +114,9 @@ class PyChess():
                 piece_label
                 ))
             
-            self.tiles[tile_num].is_occupied = True
-            self.tiles[tile_num].is_occupied_colour = colour
+            # self.tiles[tile_num].is_occupied = True
+            # self.tiles[tile_num].is_occupied_colour = colour
+            self.tiles[tile_num].occupant = self.piece_list[-1]
 
             tile_num += tile_num_change
     
@@ -134,11 +135,12 @@ class PyChess():
     def update_occupied_squares(self):
         """
         """
-        self.occupied_squares = [tile.tile_number for tile in self.tiles[1:] if tile.is_occupied]
+        self.occupied_squares = [tile.tile_number for tile in self.tiles[1:] if tile.occupant]
         
     def capture_piece(self, captured_piece):
         """
         """
+        print(captured_piece.piece_label)
         self.piece_list.remove(captured_piece)
 
     def promote_pawn(self, pawn_to_promote):
@@ -177,8 +179,9 @@ if __name__ == '__main__':
 
                         drag = True
                         active_piece = y
-                        game.tiles[active_piece.tile_number].is_occupied = False
-                        game.tiles[active_piece.tile_number].is_occupied_colour = None
+                        # game.tiles[active_piece.tile_number].is_occupied = False
+                        # game.tiles[active_piece.tile_number].is_occupied_colour = None
+                        game.tiles[active_piece.tile_number].occupant = None
 
             if event.type == pygame.MOUSEBUTTONUP and drag:
                 active_piece.execute_move(game, pos)

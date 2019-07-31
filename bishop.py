@@ -36,7 +36,7 @@ class Bishop(piece.Piece):
             self.check_tile_direction(potential_moves, tile_direction, tiles)
 
         if target_square.tile_number in potential_moves:
-            if target_square.is_occupied:
+            if target_square.occupant:
                 return 2
             else:
                 return 1

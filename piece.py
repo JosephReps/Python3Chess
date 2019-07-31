@@ -44,27 +44,17 @@ class Piece():
 
     def execute_move(self, game, pos):   
         '''
-        Executes attempted move, now that it has been validated by the `valid_move`
-            method.
-        During execution, it also performs checks for potential castling, piece_promotion
-            and captured pieces.
-        IMPORTANT:
-            It is during this method, that validity of a move based on 'check' is determined.
-
         Args:
-            tiles (list): A list of Tile objects.
             pos (tuple): Tuple of mouse x and y coordinates relative to top-left of screen.
-
-        Returns:
-            True if move was valid.
         '''
         target_square = move_validation.find_closest_tile(game.tiles, pos)
         if self.valid_move(target_square, game.tiles) == 1:
             
             try:
                 for each_tile in game.en_passent_tiles:
-                    game.tiles[each_tile].is_occupied = False
-                    game.tiles[each_tile].is_occupied_colour = None
+                    # game.tiles[each_tile].is_occupied = False
+                    # game.tiles[each_tile].is_occupied_colour = None
+                    game.tiles[each_tile].occupant = None         
             except IndexError as e:
                 print(f"ERROR: {e}")
                 print(each_tile)
@@ -85,7 +75,7 @@ class Piece():
                     game.en_passent_tiles.append(self.tile_number + 8)
                     game.tiles[self.tile_number - 8].is_occupied = True
                     game.tiles[self.tile_number - 8].is_occupied_colour = self.colour
-
+                              
                 if target_square.tile_number in [tile for tile in range(0, 9)]:
                     game.promote_pawn(self)
 
@@ -96,7 +86,9 @@ class Piece():
             self.has_moved = True
 
         elif self.valid_move(target_square, game.tiles) == 2:
-            game.capture_piece([piece for piece in game.piece_list if piece.tile_number == target_square.tile_number][0])
+            print("Capturing")
+            piece_to_capture = target_square.occupant
+            game.capture_piece(piece_to_capture)
             self.tile_number = target_square.tile_number
             movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
                                     self)
@@ -108,8 +100,7 @@ class Piece():
                                     game.tiles[self.tile_number].tile_y + 30),
                                     self)
 
-        game.tiles[self.tile_number].is_occupied = True
-        game.tiles[self.tile_number].is_occupied_colour = self.colour
+        game.tiles[self.tile_number].occupant = self
         game.update_occupied_squares()
 
 
@@ -129,9 +120,9 @@ class Piece():
         if abs(tile_direction) == 8:
             square = tile_direction
             while 0 < self.tile_number + square < 65:
-                # print(square)
-                if tiles[self.tile_number + square].is_occupied:
-                    if tiles[self.tile_number + square].is_occupied_colour != self.colour:
+                if tiles[self.tile_number + square].occupant:
+                    print("Occupied sq")
+                    if tiles[self.tile_number + square].occupant.colour != self.colour:
                         potential_moves.append(self.tile_number + square)
                         break
                     else:
@@ -144,8 +135,8 @@ class Piece():
         else:
             square = tile_direction
             while 0 < self.tile_number + square < 65:
-                if tiles[self.tile_number + square].is_occupied:
-                    if tiles[self.tile_number + square].is_occupied_colour != self.colour:
+                if tiles[self.tile_number + square].occupant:
+                    if tiles[self.tile_number + square].occupant.colour != self.colour:
                         potential_moves.append(self.tile_number + square)
                         break
                     else:
@@ -158,8 +149,6 @@ class Piece():
 
                 square += tile_direction
         
-        print(potential_moves)
-
 
 
 

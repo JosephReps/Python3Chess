@@ -36,7 +36,7 @@ class King(piece.Piece):
             self.check_tile_direction(potential_moves, tile_direction, tiles)
 
         if target_square.tile_number in potential_moves:
-            if target_square.is_occupied:
+            if target_square.occupant:
                 return 2
             else:
                 return 1
@@ -58,8 +58,8 @@ class King(piece.Piece):
 
         print(self.tile_number, tile_direction)
 
-        if tiles[self.tile_number + tile_direction].is_occupied:
-            if tiles[self.tile_number + tile_direction].is_occupied_colour != self.colour:
+        if tiles[self.tile_number + tile_direction].occupant:
+            if tiles[self.tile_number + tile_direction].occupant.colour != self.colour:
                 potential_moves.append(self.tile_number + tile_direction)
         else:
             potential_moves.append(self.tile_number + tile_direction)

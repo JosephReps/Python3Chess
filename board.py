@@ -16,6 +16,7 @@ class Tile(object):
         self.tile_number = tile_number
         self.tile_size = tile_size
         self.tile_colour = tile_colour
+        self.occupant = None
         
     def draw_tile(self,screen):
         '''
