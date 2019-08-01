@@ -87,7 +87,6 @@ class Pawn(piece.Piece):
                 if not game.tiles[self.tile_number + ((self.tile_directions[1])*2)].occupant:
                     potential_moves.append(self.tile_number + self.tile_directions[1]*2)
         
-        print("PAWN POTS: ", potential_moves)
         
 
                 

@@ -52,8 +52,6 @@ class Piece():
             
             try:
                 for each_tile in game.en_passent_tiles:
-                    # game.tiles[each_tile].is_occupied = False
-                    # game.tiles[each_tile].is_occupied_colour = None
                     game.tiles[each_tile].occupant = None         
             except IndexError as e:
                 print(f"ERROR: {e}")
@@ -94,6 +92,11 @@ class Piece():
             
             self.has_moved = True
 
+        elif self.valid_move(target_square, game) == 3:
+            self.castle(target_square.tile_number, game)
+            self.tile_number = target_square.tile_number
+            movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
+                                    self)
         else:
             movement.drag_piece((game.tiles[self.tile_number].tile_x + 30,
                                     game.tiles[self.tile_number].tile_y + 30),
@@ -101,8 +104,6 @@ class Piece():
 
         game.tiles[self.tile_number].occupant = self
         game.update_occupied_squares()
-        print(game.en_passent_tiles)
-
 
     def check_tile_direction(self, potential_moves, tile_direction, game):
         """
@@ -148,6 +149,35 @@ class Piece():
                     break
 
                 square += tile_direction
+
+    def castle(self, square_number, game):
+        """
+        WILL CLEAN UP LATERRRRRRRR
+        """
+        if square_number == 3:
+            game.tiles[4].occupant = game.tiles[0].occupant
+            game.tiles[4].occupant.tile_number = 4
+            game.tiles[0].occupant = None
+            movement.drag_piece((game.tiles[4].tile_x + 30, game.tiles[4].tile_y + 30), 
+                        game.tiles[4].occupant)
+        elif square_number == 7:
+            game.tiles[6].occupant = game.tiles[8].occupant
+            game.tiles[6].occupant.tile_number = 6
+            game.tiles[8].occupant = None
+            movement.drag_piece((game.tiles[6].tile_x + 30, game.tiles[6].tile_y + 30), 
+                        game.tiles[6].occupant)
+        elif square_number == 63:
+            game.tiles[62].occupant = game.tiles[64].occupant
+            game.tiles[62].occupant.tile_number = 62
+            game.tiles[64].occupant = None
+            movement.drag_piece((game.tiles[62].tile_x + 30, game.tiles[62].tile_y + 30), 
+                        game.tiles[62].occupant)
+        elif square_number == 59:
+            game.tiles[60].occupant = game.tiles[57].occupant
+            game.tiles[60].occupant.tile_number = 60
+            game.tiles[57].occupant = None
+            movement.drag_piece((game.tiles[60].tile_x + 30, game.tiles[60].tile_y + 30), 
+                        game.tiles[60].occupant)
         
 
 

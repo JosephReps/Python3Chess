@@ -5,12 +5,12 @@ Python Chess.
 """
 CHECKLIST:
     - King pieces <-----
-        - Castling
+        - Castling <------
         - Check/stale/mate
     - Pawn pieces <------
         - Double move <------
-        - en passent <------- DONEEEEE
-        - Piece promotion <---- To queen is done
+        - en passent <------- 
+        - Piece promotion <---- To queen is done (GLTICHY)
 
     - Draw in 50 moves
     - Draw by 3x reps
@@ -74,7 +74,7 @@ class PyChess():
         #BLACK BISHOP
         self.init_piece(2, 2, Bishop, BLACK, 'piece_sprite/black_bishop.png', 'black bishop', 4)
         #WHITE ROOK
-        self.init_piece(57, 1, Rook, WHITE, 'piece_sprite/white_rook.png', 'white rook', -4)
+        self.init_piece(64, 1, Rook, WHITE, 'piece_sprite/white_rook.png', 'white rook', -4)
         #BLACK ROOK
         self.init_piece(5, 2, Rook, BLACK, 'piece_sprite/black_rook.png', 'black rook', 4)
         #WHITE KING
@@ -86,7 +86,7 @@ class PyChess():
         #BLACK PAWN
         self.init_piece(23, 1, Pawn, BLACK, 'piece_sprite/black_pawn.png', 'black pawn', 0)
         #WHITE PAWN
-        self.init_piece(64, 1, Pawn, WHITE, 'piece_sprite/white_pawn.png', 'white pawn', 0)
+        self.init_piece(57, 1, Pawn, WHITE, 'piece_sprite/white_pawn.png', 'white pawn', 0)
 
     def init_piece(self, tile_num, number_of_pieces, 
     piece_type, colour, image, piece_label, tile_num_change):
@@ -114,8 +114,6 @@ class PyChess():
                 piece_label
                 ))
             
-            # self.tiles[tile_num].is_occupied = True
-            # self.tiles[tile_num].is_occupied_colour = colour
             self.tiles[tile_num].occupant = self.piece_list[-1]
 
             tile_num += tile_num_change
@@ -179,8 +177,6 @@ if __name__ == '__main__':
 
                         drag = True
                         active_piece = y
-                        # game.tiles[active_piece.tile_number].is_occupied = False
-                        # game.tiles[active_piece.tile_number].is_occupied_colour = None
                         game.tiles[active_piece.tile_number].occupant = None
 
             if event.type == pygame.MOUSEBUTTONUP and drag:
