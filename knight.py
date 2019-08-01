@@ -26,7 +26,7 @@ class Knight(piece.Piece):
         self.piece_label = piece_label
         
 
-    def valid_move(self, target_square, tiles):
+    def valid_move(self, target_square, game):
         """
         Calculates valid move based on the board and this pieces current position.
         Does not take into account check.
@@ -34,7 +34,7 @@ class Knight(piece.Piece):
         potential_moves = []
 
         for tile_direction in [6, 10, 15, 17, -6, -10, -15, -17]:         
-            self.check_tile_direction(potential_moves, tile_direction, tiles)
+            self.check_tile_direction(potential_moves, tile_direction, game)
 
         if target_square.tile_number in potential_moves:
             if target_square.occupant:
@@ -42,7 +42,7 @@ class Knight(piece.Piece):
             else:
                 return 1
 
-    def check_tile_direction(self, potential_moves, tile_direction, tiles):
+    def check_tile_direction(self, potential_moves, tile_direction, game):
         """
         """
         left_edge_squares = [1, 9, 17, 25, 33, 41, 49, 57]
@@ -65,8 +65,8 @@ class Knight(piece.Piece):
         elif 64 < self.tile_number + tile_direction  or self.tile_number + tile_direction < 0:
             return
 
-        if tiles[self.tile_number + tile_direction].occupant:
-            if tiles[self.tile_number + tile_direction].occupant.colour != self.colour:
+        if game.tiles[self.tile_number + tile_direction].occupant:
+            if game.tiles[self.tile_number + tile_direction].occupant.colour != self.colour:
                 potential_moves.append(self.tile_number + tile_direction)
         else:
             potential_moves.append(self.tile_number + tile_direction)

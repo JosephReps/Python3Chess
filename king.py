@@ -25,7 +25,7 @@ class King(piece.Piece):
         super().__init__(piece_x, piece_y, tile_number, colour, piece_image,)
         self.piece_label = piece_label
 
-    def valid_move(self, target_square, tiles):
+    def valid_move(self, target_square, game):
         """
         Calculates valid move based on the board and this pieces current position.
         Does not take into account check.
@@ -33,7 +33,7 @@ class King(piece.Piece):
         potential_moves = []
 
         for tile_direction in [8, -8, 1, -1, 7, -7, 9, -9]:         
-            self.check_tile_direction(potential_moves, tile_direction, tiles)
+            self.check_tile_direction(potential_moves, tile_direction, game)
 
         if target_square.tile_number in potential_moves:
             if target_square.occupant:
@@ -41,7 +41,7 @@ class King(piece.Piece):
             else:
                 return 1
 
-    def check_tile_direction(self, potential_moves, tile_direction, tiles):
+    def check_tile_direction(self, potential_moves, tile_direction, game):
         """
         """
         left_edge_squares = [1, 9, 17, 25, 33, 41, 49, 57]
@@ -58,18 +58,18 @@ class King(piece.Piece):
 
         print(self.tile_number, tile_direction)
 
-        if tiles[self.tile_number + tile_direction].occupant:
-            if tiles[self.tile_number + tile_direction].occupant.colour != self.colour:
+        if game.tiles[self.tile_number + tile_direction].occupant:
+            if game.tiles[self.tile_number + tile_direction].occupant.colour != self.colour:
                 potential_moves.append(self.tile_number + tile_direction)
         else:
             potential_moves.append(self.tile_number + tile_direction)
 
         if not self.has_moved:
-            self.check_castle(tiles)
+            self.check_castle(game.tiles)
 
-    def check_castle(self, tiles, piece_list):
-        """
-        """
-        # if self.colour == (0,0,0):
-        #     if tiles
-        pass
+    # def check_castle(self, game.tiles, piece_list):
+    #     """
+    #     """
+    #     # if self.colour == (0,0,0):
+    #     #     if game.tiles
+    #     pass

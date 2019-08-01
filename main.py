@@ -9,7 +9,7 @@ CHECKLIST:
         - Check/stale/mate
     - Pawn pieces <------
         - Double move <------
-        - en passent
+        - en passent <------- DONEEEEE
         - Piece promotion <---- To queen is done
 
     - Draw in 50 moves
@@ -47,7 +47,7 @@ class PyChess():
         self.tiles = board.draw_board(self.screen)
 
         self.move_history = []
-        self.en_passent_tiles = []
+        self.en_passent_tiles = {}
 
     def event_handler(self):
         """

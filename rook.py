@@ -25,7 +25,7 @@ class Rook(piece.Piece):
         super().__init__(piece_x, piece_y, tile_number, colour, piece_image,)
         self.piece_label = piece_label
 
-    def valid_move(self, target_square, tiles):
+    def valid_move(self, target_square, game):
         """
         Calculates valid move based on the board and this pieces current position.
         Does not take into account check.
@@ -33,7 +33,7 @@ class Rook(piece.Piece):
         potential_moves = []
 
         for tile_direction in [8, -8, 1, -1]:     
-            self.check_tile_direction(potential_moves, tile_direction, tiles)
+            self.check_tile_direction(potential_moves, tile_direction, game)
 
         if target_square.tile_number in potential_moves:
             if target_square.occupant:
