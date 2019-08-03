@@ -1,8 +1,6 @@
 '''
-Behaiviour and attributes unique to Queen pieces.
+Behaviour and attributes unique to Queen pieces.
 '''
-import pygame
-import sys
 import piece
 
 BLACK = (0,0,0)
@@ -12,14 +10,18 @@ class Bishop(piece.Piece):
     '''
     This class is responsible for the behaviour of all Bishop pieces
     during the game.
-    This includes:
-        - Move verification
     '''
 
-    def __init__(self, piece_x, piece_y, tile_number, colour, piece_image, piece_label):
+    def __init__(self, piece_x, piece_y, tile_number, colour, piece_image, 
+                 piece_label):
         '''
         Args:
-            piece_label (string): String containing name of piece.
+            piece_x <int>: The x-position of the piece on the game screen.
+            piece_y <int>: The y-position of the piece on the game screen.
+            tile_number <int>: The tile number the piece is on.
+            colour <tuple><int>: RGB, either BLACK or WHITE.
+            piece_image <str>: The image of the piece.
+            piece_label <string>: String containing name of piece.
         '''
 
         super().__init__(piece_x, piece_y, tile_number, colour, piece_image,)
@@ -27,8 +29,18 @@ class Bishop(piece.Piece):
 
     def valid_move(self, target_square, game):
         """
-        Calculates valid move based on the board and this pieces current position.
-        Does not take into account check.
+        Checks whether an attempted move is valid. 
+
+        Parameters:
+            target_square <Tile object>: The tile which the piece is attempting 
+                                         to move to.
+            game <Pychess object>: The main game controller.
+
+        Returns:
+            2: If the selected move was a capture.
+            1: If the selected move was a normal move.
+            potential_moves <list><int>: A list of the tile numbers that 
+                                        the piece could move to.
         """
         potential_moves = []
 

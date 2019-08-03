@@ -34,6 +34,7 @@ WHITE = (255,255,255)
 
 class PyChess():
     """
+    Game controller.
     """
 
     def __init__(self):
@@ -51,6 +52,9 @@ class PyChess():
 
         self.player_turn = (255,255,255)
 
+        self.piece_list = []
+        self.occupied_squares = []
+
     def event_handler(self):
         """
         """
@@ -59,8 +63,8 @@ class PyChess():
     def new_game(self):
         """
         Initiates the game.
+        Creates all pieces and sets them to starting position.
         """
-        self.piece_list = []
         self.init_pieces()
 
     def init_pieces(self):
@@ -94,8 +98,8 @@ class PyChess():
 
     def init_piece(self, tile_num, number_of_pieces, 
     piece_type, colour, image, piece_label, tile_num_change):
-        '''
-        Creates piece objects.
+        """
+        Creates piece objects, appends them to piece_list.
 
         Args:
             tile_num (int): The tile number the piece will be created on.
@@ -104,8 +108,9 @@ class PyChess():
             colour (tuple): A tuple containing rgb colour of piece.
             image (image): Image of piece sprite.
             piece_label (str): The name of the piece.
-            tile_num_change (int): The difference in square number between each piece created.
-        '''
+            tile_num_change (int): The difference in square number between 
+                                   each piece created.
+        """
         tile_num = tile_num
 
         for _ in range(number_of_pieces):
@@ -123,30 +128,33 @@ class PyChess():
             tile_num += tile_num_change
     
     def draw_pieces(self):
-        '''
+        """
         Draws the pieces from piece_list to screen.
-
-        Args:
-            screen (Pygame object): Pygame screen object.
-            piece_list (list): A list of Piece objects on the board.
-        '''
-        
+        """
         for i in self.piece_list:
             i.draw_piece(self.screen)
     
     def update_occupied_squares(self):
         """
+        Updates the occupied squares list.
         """
         self.occupied_squares = [tile.tile_number for tile in self.tiles[1:] if tile.occupant]
         
     def capture_piece(self, captured_piece):
         """
+        Removes piece from piece list.
+
+        Parameters:
+            captured_piece <Piece object>: Piece which is to be removed.
         """
-        print(captured_piece.piece_label)
         self.piece_list.remove(captured_piece)
 
     def promote_pawn(self, pawn_to_promote):
         """
+        Promotes pawn to queen.
+
+        Parameters:
+            pawn_to_promote <Piece object>: The pawn to be promoted.
         """
         if pawn_to_promote.colour == BLACK:
             image = pygame.image.load('piece_sprite/black_queen.png')
@@ -159,6 +167,7 @@ class PyChess():
 
     def toggle_turn(self):
         """
+        Changes the player turn.
         """
         if self.player_turn == (255,255,255):
             self.player_turn = (0,0,0)
@@ -172,6 +181,15 @@ class PyChess():
 
     def get_attacked_squares(self, colour):
         """
+        Finds all the tile numbers which are attacked by a player.
+
+        Parameters:
+            colour <tuple><int>: RGB, either BLACK or WHITE. The colour of player
+                                 who we are checking.
+        
+        Returns:
+            attacked_squares <list><int>: A list of tile numbers which are attacked
+                                          by the chosen player.
         """
         attacked_squares = set([square for piece in self.piece_list for square in piece.valid_move(None, self) if piece.colour == colour])
         return list(attacked_squares)

@@ -32,18 +32,22 @@ class Piece():
         Draws piece to screen.
 
         Args:
-            screen <Pygame object>: Pygame screen object set in `Main`.
+            screen <Pygame object>: Pygame screen object.
         '''
         self.piece_object = screen.blit(self.piece_image, 
                                        (self.piece_x, self.piece_y))
 
     def execute_move(self, game, pos):   
         '''
+        Executes a selected move.
+
         Args:
             pos <tuple><int>: Mouse x and y coordinates.
             game <Pychess object>: The main game controller.
         '''
         target_square = move_validation.find_closest_tile(game.tiles, pos)
+
+        # Normal move
         if self.valid_move(target_square, game) == 1:
             
             self.pawn_specific(target_square, game)
@@ -55,6 +59,7 @@ class Piece():
             self.has_moved = True
             game.toggle_turn()
 
+        # Capture
         elif self.valid_move(target_square, game) == 2:
 
             if target_square.tile_number in game.en_passent_tiles.keys():
@@ -70,13 +75,15 @@ class Piece():
             self.has_moved = True
             game.toggle_turn()
 
+        # Castling
         elif self.valid_move(target_square, game) == 3:
             self.castle(target_square.tile_number, game)
             self.tile_number = target_square.tile_number
             movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
                                     self)
             game.toggle_turn()
-            
+        
+        # Returns the piece to origin
         else:
             movement.drag_piece((game.tiles[self.tile_number].tile_x + 30,
                                     game.tiles[self.tile_number].tile_y + 30),
@@ -117,6 +124,14 @@ class Piece():
 
     def check_tile_direction(self, potential_moves, tile_direction, game):
         """
+        Creates a list of potential moves in direction of tile_direction.
+
+        Parameters:
+            potential_moves <list>: An empty list which will contain
+                                    our potential moves.
+            tile_direction <int>: The direction we are checking, eg:
+                                  vertical will be +8 or -8.
+            game <Pychess object>: The main game controller. 
         """
         edge_squares = [1, 9, 17, 25, 33, 41, 49, 57, 8, 
                         16, 24, 32, 40, 48, 56, 64]
@@ -147,7 +162,11 @@ class Piece():
 
     def castle(self, square_number, game):
         """
-        WILL CLEAN UP LATERRRRRRRR
+        Castles, and adjusts tile/piece attributes accordingly.
+
+        Parameters:
+            square_number <int>: The new square number of the king.
+            game <Pychess object>: The main game controller. 
         """
         if square_number == 3:
             game.tiles[4].occupant = game.tiles[1].occupant

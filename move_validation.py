@@ -1,15 +1,13 @@
-import pygame
-
 def find_closest_tile(tiles, pos):
     '''
     Locates the closest tile on the board to the mouse position.
 
     Args:
-        pos (tuple): Tuple of mouse x and y coordinates relative to top-left of screen.
-        tiles (list): A list of Tile objects.
+        pos <tuple>: Tuple of mouse x and y.
+        tiles <list>: A list of Tile objects.
 
     Returns:
-        closest_tile (Tile object): Tile object which is closest to mouse.
+        closest_tile <Tile object>: Tile object which is closest to mouse.
     '''
     distance_to_closest_tile = 99999999
 

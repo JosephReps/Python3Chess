@@ -1,8 +1,6 @@
 '''
-Behaiviour and attributes unique to King pieces.
+Behaviour and attributes unique to King pieces.
 '''
-import pygame
-import sys
 import piece
 
 BLACK = (0,0,0)
@@ -64,7 +62,6 @@ class King(piece.Piece):
                     return 1
         else:
             return potential_moves
-            
 
     def check_tile_direction(self, potential_moves, tile_direction, game):
         """
@@ -87,7 +84,8 @@ class King(piece.Piece):
             return
 
         # If the potential move is off the board.
-        elif 64 < self.tile_number + tile_direction or self.tile_number + tile_direction < 0:
+        elif 64 < self.tile_number + tile_direction or \
+                    self.tile_number + tile_direction < 0:
             return
 
         # If the tile has a piece on it.
