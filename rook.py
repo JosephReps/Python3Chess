@@ -35,9 +35,12 @@ class Rook(piece.Piece):
         for tile_direction in [8, -8, 1, -1]:     
             self.check_tile_direction(potential_moves, tile_direction, game)
 
-        if target_square.tile_number in potential_moves:
-            if target_square.occupant:
-                return 2
-            else:
-                return 1
+        if target_square:
+            if target_square.tile_number in potential_moves:
+                if target_square.occupant:
+                    return 2
+                else:
+                    return 1
+        else:
+            return potential_moves
         

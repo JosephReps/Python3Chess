@@ -45,11 +45,15 @@ class Pawn(piece.Piece):
         for tile_direction in self.tile_directions:         
             self.check_tile_direction(potential_moves, tile_direction, game)
 
-        if target_square.tile_number in potential_moves:
-            if target_square.occupant or target_square.tile_number in game.en_passent_tiles:
-                return 2
-            else:
-                return 1
+        if target_square:
+            if target_square.tile_number in potential_moves:
+                if target_square.occupant or target_square.tile_number in game.en_passent_tiles:
+                    return 2
+                else:
+                    return 1
+        
+        else:
+            return potential_moves
 
     def check_tile_direction(self, potential_moves, tile_direction, game):
         """

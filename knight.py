@@ -36,11 +36,14 @@ class Knight(piece.Piece):
         for tile_direction in [6, 10, 15, 17, -6, -10, -15, -17]:         
             self.check_tile_direction(potential_moves, tile_direction, game)
 
-        if target_square.tile_number in potential_moves:
-            if target_square.occupant:
-                return 2
-            else:
-                return 1
+        if target_square:
+            if target_square.tile_number in potential_moves:
+                if target_square.occupant:
+                    return 2
+                else:
+                    return 1
+        else:
+            return potential_moves
 
     def check_tile_direction(self, potential_moves, tile_direction, game):
         """

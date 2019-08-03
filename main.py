@@ -49,6 +49,8 @@ class PyChess():
         self.move_history = []
         self.en_passent_tiles = {}
 
+        self.player_turn = (255,255,255)
+
     def event_handler(self):
         """
         """
@@ -66,27 +68,29 @@ class PyChess():
         Creates black/white pieces, sets the starting pos/square of each piece.
         '''
         #WHITE QUEEN
-        self.init_piece(59, 1, Queen, WHITE, 'piece_sprite/white_queen.png', 'white queen', 0)
+        self.init_piece(60, 1, Queen, WHITE, 'piece_sprite/white_queen.png', 'white queen', 0)
         #BLACK QUEEN
-        self.init_piece(3, 1, Queen, BLACK, 'piece_sprite/black_queen.png', 'black queen', 0)
+        self.init_piece(4, 1, Queen, BLACK, 'piece_sprite/black_queen.png', 'black queen', 0)
         #WHITE BISHOP
-        self.init_piece(60, 2, Bishop, WHITE, 'piece_sprite/white_bishop.png', 'white bishop', -5)
+        self.init_piece(62, 2, Bishop, WHITE, 'piece_sprite/white_bishop.png', 'white bishop', -3)
         #BLACK BISHOP
-        self.init_piece(2, 2, Bishop, BLACK, 'piece_sprite/black_bishop.png', 'black bishop', 4)
+        self.init_piece(3, 2, Bishop, BLACK, 'piece_sprite/black_bishop.png', 'black bishop', 3)
         #WHITE ROOK
-        self.init_piece(64, 1, Rook, WHITE, 'piece_sprite/white_rook.png', 'white rook', -4)
+        self.init_piece(64, 2, Rook, WHITE, 'piece_sprite/white_rook.png', 'white rook', -7)
         #BLACK ROOK
-        self.init_piece(5, 2, Rook, BLACK, 'piece_sprite/black_rook.png', 'black rook', 4)
+        self.init_piece(1, 2, Rook, BLACK, 'piece_sprite/black_rook.png', 'black rook', 7)
         #WHITE KING
         self.init_piece(61, 1, King, WHITE, 'piece_sprite/white_king.png', 'white king', 0)
+        #BLACK KING
+        self.init_piece(5, 1, King, BLACK, 'piece_sprite/black_king.png', 'black king', 0)
         #WHITE KNIGHT
-        self.init_piece(40, 1, Knight, WHITE, 'piece_sprite/white_knight.png', 'white knight', 0)
+        self.init_piece(63, 2, Knight, WHITE, 'piece_sprite/white_knight.png', 'white knight', -5)
         #BLACK KNIGHT
-        self.init_piece(30, 1, Knight, BLACK, 'piece_sprite/black_knight.png', 'black knight', 0)
+        self.init_piece(2, 2, Knight, BLACK, 'piece_sprite/black_knight.png', 'black knight', 5)
         #BLACK PAWN
-        self.init_piece(23, 1, Pawn, BLACK, 'piece_sprite/black_pawn.png', 'black pawn', 0)
+        self.init_piece(9, 8, Pawn, BLACK, 'piece_sprite/black_pawn.png', 'black pawn', 1)
         #WHITE PAWN
-        self.init_piece(57, 1, Pawn, WHITE, 'piece_sprite/white_pawn.png', 'white pawn', 0)
+        self.init_piece(56, 8, Pawn, WHITE, 'piece_sprite/white_pawn.png', 'white pawn', -1)
 
     def init_piece(self, tile_num, number_of_pieces, 
     piece_type, colour, image, piece_label, tile_num_change):
@@ -153,6 +157,25 @@ class PyChess():
 
         self.piece_list[(self.piece_list.index(pawn_to_promote))] = Queen(pawn_to_promote.piece_x, pawn_to_promote.piece_y, pawn_to_promote.tile_number, pawn_to_promote.colour, image, label)
 
+    def toggle_turn(self):
+        """
+        """
+        if self.player_turn == (255,255,255):
+            self.player_turn = (0,0,0)
+        else:
+            self.player_turn = (255,255,255)
+
+    def check(self):
+        """
+        """
+        print(self.get_attacked_squares(BLACK))
+
+    def get_attacked_squares(self, colour):
+        """
+        """
+        attacked_squares = set([square for piece in self.piece_list for square in piece.valid_move(None, self) if piece.colour == colour])
+        return list(attacked_squares)
+
 
 if __name__ == '__main__':
     game = PyChess()
@@ -174,15 +197,16 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEBUTTONDOWN: 
                 for y in game.piece_list:
                     if y.piece_object.collidepoint(pos):
-
-                        drag = True
-                        active_piece = y
-                        game.tiles[active_piece.tile_number].occupant = None
+                        if y.colour == game.player_turn:
+                            drag = True
+                            active_piece = y
+                            game.tiles[active_piece.tile_number].occupant = None
 
             if event.type == pygame.MOUSEBUTTONUP and drag:
                 active_piece.execute_move(game, pos)
                 drag = False
                 active_piece = None
+                # game.check()
 
         if drag:
             movement.drag_piece(pos, active_piece)
