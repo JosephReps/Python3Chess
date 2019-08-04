@@ -55,6 +55,9 @@ class PyChess():
         self.piece_list = []
         self.occupied_squares = []
 
+        self.white_check = False
+        self.black_check = False
+
     def event_handler(self):
         """
         """
@@ -66,6 +69,8 @@ class PyChess():
         Creates all pieces and sets them to starting position.
         """
         self.init_pieces()
+        self.white_king = [piece for piece in self.piece_list if piece.piece_label == 'white king'][0]
+        self.black_king = [piece for piece in self.piece_list if piece.piece_label == 'black king'][0]
 
     def init_pieces(self):
         '''
@@ -177,7 +182,10 @@ class PyChess():
     def check(self):
         """
         """
-        print(self.get_attacked_squares(BLACK))
+        if self.white_king.tile_number in self.get_attacked_squares(BLACK):
+            print("WHITE CHECK")
+        if self.black_king.tile_number in self.get_attacked_squares(WHITE):
+            print("BLACK CHECK")
 
     def get_attacked_squares(self, colour):
         """
@@ -224,7 +232,7 @@ if __name__ == '__main__':
                 active_piece.execute_move(game, pos)
                 drag = False
                 active_piece = None
-                # game.check()
+                game.check()
 
         if drag:
             movement.drag_piece(pos, active_piece)

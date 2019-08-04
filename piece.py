@@ -52,9 +52,7 @@ class Piece():
             
             self.pawn_specific(target_square, game)
 
-            self.tile_number = target_square.tile_number
-            movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
-                                    self)
+            self.move(target_square)
 
             self.has_moved = True
             game.toggle_turn()
@@ -68,9 +66,7 @@ class Piece():
                 piece_to_capture = target_square.occupant
 
             game.capture_piece(piece_to_capture)
-            self.tile_number = target_square.tile_number
-            movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
-                                    self)
+            self.move(target_square)
             
             self.has_moved = True
             game.toggle_turn()
@@ -78,11 +74,9 @@ class Piece():
         # Castling
         elif self.valid_move(target_square, game) == 3:
             self.castle(target_square.tile_number, game)
-            self.tile_number = target_square.tile_number
-            movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
-                                    self)
+            self.move(target_square)
             game.toggle_turn()
-        
+
         # Returns the piece to origin
         else:
             movement.drag_piece((game.tiles[self.tile_number].tile_x + 30,
@@ -144,21 +138,22 @@ class Piece():
         elif self.tile_number in right_edge and tile_direction in [9, -7, 1]:
             return
 
-            square = tile_direction
-            while 0 < self.tile_number + square < 65:
-                if abs(tile_direction) != 8:
-                    if (self.tile_number + square) in edge_squares:
-                        break
-                if game.tiles[self.tile_number + square].occupant:
-                    if game.tiles[self.tile_number + square].occupant.colour != self.colour:
-                        potential_moves.append(self.tile_number + square)
-                        break
-                    else:
-                        break
-                else:
+        square = tile_direction
+        while 0 < self.tile_number + square < 65:
+            if abs(tile_direction) != 8:
+                if (self.tile_number + square) in edge_squares:
                     potential_moves.append(self.tile_number + square)
-                
-                square += tile_direction
+                    break
+            if game.tiles[self.tile_number + square].occupant:
+                if game.tiles[self.tile_number + square].occupant.colour != self.colour:
+                    potential_moves.append(self.tile_number + square)
+                    break
+                else:
+                    break
+            else:
+                potential_moves.append(self.tile_number + square)
+            
+            square += tile_direction
 
     def castle(self, square_number, game):
         """
@@ -192,6 +187,14 @@ class Piece():
             game.tiles[57].occupant = None
             movement.drag_piece((game.tiles[60].tile_x + 30, game.tiles[60].tile_y + 30), 
                         game.tiles[60].occupant)
+
+    def move(self, target_square):
+        """
+        """
+        self.tile_number = target_square.tile_number
+        movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
+                                self)
+
         
 
 

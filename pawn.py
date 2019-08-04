@@ -55,7 +55,7 @@ class Pawn(piece.Piece):
         potential_moves = []
 
         for tile_direction in self.tile_directions:         
-            self.check_tile_direction(potential_moves, tile_direction, game)
+            self.check_tile_direction(potential_moves, tile_direction, game, target_square)
 
         if target_square:
             if target_square.tile_number in potential_moves:
@@ -68,7 +68,7 @@ class Pawn(piece.Piece):
         else:
             return potential_moves
 
-    def check_tile_direction(self, potential_moves, tile_direction, game):
+    def check_tile_direction(self, potential_moves, tile_direction, game, target_square):
         """
         Creates a list of potential moves in direction of tile_direction.
 
@@ -82,10 +82,10 @@ class Pawn(piece.Piece):
         left_edge_squares = [1, 9, 17, 25, 33, 41, 49, 57]
         right_edge_squares = [8, 16, 24, 32, 40, 48, 56, 64]
 
-        if self.tile_number in right_edge_squares and abs(tile_direction) == 7:
+        if self.tile_number in right_edge_squares and abs(tile_direction) == 9:
             return
         
-        elif self.tile_number in left_edge_squares and abs(tile_direction) == 9:
+        elif self.tile_number in left_edge_squares and abs(tile_direction) == 7:
             return
 
         elif 64 < self.tile_number + tile_direction or \
@@ -104,8 +104,9 @@ class Pawn(piece.Piece):
         elif self.tile_number + tile_direction in game.en_passent_tiles.keys():
             potential_moves.append(self.tile_number + tile_direction)
 
-        # self.tile_directions[1] == 8 or -8
-        if self.has_moved == False:
-            if not game.tiles[self.tile_number + self.tile_directions[1]].occupant:
-                if not game.tiles[self.tile_number + ((self.tile_directions[1])*2)].occupant:
-                    potential_moves.append(self.tile_number + self.tile_directions[1]*2)                
+        if target_square:
+            # self.tile_directions[1] == 8 or -8
+            if self.has_moved == False:
+                if not game.tiles[self.tile_number + self.tile_directions[1]].occupant:
+                    if not game.tiles[self.tile_number + ((self.tile_directions[1])*2)].occupant:
+                        potential_moves.append(self.tile_number + self.tile_directions[1]*2)                
