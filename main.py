@@ -179,13 +179,17 @@ class PyChess():
         else:
             self.player_turn = (255,255,255)
 
-    def check(self):
+    def check(self, colour):
         """
         """
-        if self.white_king.tile_number in self.get_attacked_squares(BLACK):
-            print("WHITE CHECK")
-        if self.black_king.tile_number in self.get_attacked_squares(WHITE):
-            print("BLACK CHECK")
+        if colour == (255,255,255):
+            if self.white_king.tile_number in self.get_attacked_squares(colour):
+                print("WHITE CHECK")
+                return True
+        else:
+            if self.black_king.tile_number in self.get_attacked_squares(WHITE):
+                print("BLACK CHECK")
+                return True
 
     def get_attacked_squares(self, colour):
         """
@@ -232,7 +236,6 @@ if __name__ == '__main__':
                 active_piece.execute_move(game, pos)
                 drag = False
                 active_piece = None
-                game.check()
 
         if drag:
             movement.drag_piece(pos, active_piece)

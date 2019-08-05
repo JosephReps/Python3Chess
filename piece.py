@@ -52,10 +52,9 @@ class Piece():
             
             self.pawn_specific(target_square, game)
 
-            self.move(target_square)
-
-            self.has_moved = True
-            game.toggle_turn()
+            if self.move(target_square, game):
+                self.has_moved = True
+                game.toggle_turn()
 
         # Capture
         elif self.valid_move(target_square, game) == 2:
@@ -65,17 +64,17 @@ class Piece():
             else:
                 piece_to_capture = target_square.occupant
 
-            game.capture_piece(piece_to_capture)
-            self.move(target_square)
-            
-            self.has_moved = True
-            game.toggle_turn()
+            if self.move(target_square, game):
+                self.has_moved = True
+                game.capture_piece(piece_to_capture)
+                game.toggle_turn()
 
         # Castling
         elif self.valid_move(target_square, game) == 3:
             self.castle(target_square.tile_number, game)
-            self.move(target_square)
-            game.toggle_turn()
+            if self.move(target_square, game):
+                self.has_moved = True
+                game.toggle_turn()
 
         # Returns the piece to origin
         else:
@@ -83,7 +82,7 @@ class Piece():
                                     game.tiles[self.tile_number].tile_y + 30),
                                     self)
 
-        game.tiles[self.tile_number].occupant = self
+        
         game.update_occupied_squares()
 
     def pawn_specific(self, target_square, game):
@@ -188,18 +187,25 @@ class Piece():
             movement.drag_piece((game.tiles[60].tile_x + 30, game.tiles[60].tile_y + 30), 
                         game.tiles[60].occupant)
 
-    def move(self, target_square):
+    def move(self, target_square, game):
         """
         """
+        starting_occupant = game.tiles[target_square.tile_number].occupant
+        starting_tile_number = self.tile_number
+
+        game.tiles[starting_tile_number].occupant = None
         self.tile_number = target_square.tile_number
-        movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
-                                self)
+        game.tiles[self.tile_number].occupant = self
+        if game.check(game.player_turn):
+            game.tiles[starting_tile_number].occupant = self
+            self.tile_number = starting_tile_number
+            game.tiles[self.tile_number].occupant = starting_occupant
+            movement.drag_piece((game.tiles[starting_tile_number].tile_x + 30, game.tiles[starting_tile_number].tile_y + 30), 
+                self)
+            return False
 
-        
-
-
-
-
-            
-
+        else:
+            movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
+                            self)
+            return True
 
