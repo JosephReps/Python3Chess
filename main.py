@@ -17,7 +17,6 @@ CHECKLIST:
 
     - fix the square numbers uce
 """
-
 import pygame
 import board
 import movement
@@ -27,7 +26,6 @@ from queen import Queen
 from bishop import Bishop
 from rook import Rook
 from king import King
-import move_validation
 
 BLACK = (0,0,0)
 WHITE = (255,255,255)
@@ -183,12 +181,10 @@ class PyChess():
         """
         """
         if colour == (255,255,255):
-            if self.white_king.tile_number in self.get_attacked_squares(colour):
-                print("WHITE CHECK")
+            if self.white_king.tile_number in self.get_attacked_squares(BLACK):
                 return True
         else:
             if self.black_king.tile_number in self.get_attacked_squares(WHITE):
-                print("BLACK CHECK")
                 return True
 
     def get_attacked_squares(self, colour):
@@ -205,6 +201,14 @@ class PyChess():
         """
         attacked_squares = set([square for piece in self.piece_list for square in piece.valid_move(None, self) if piece.colour == colour])
         return list(attacked_squares)
+
+    def check_mate(self):
+        """
+        """
+
+    def stale_mate(self):
+        """
+        """
 
 
 if __name__ == '__main__':

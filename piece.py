@@ -64,10 +64,13 @@ class Piece():
             else:
                 piece_to_capture = target_square.occupant
 
+            game.capture_piece(piece_to_capture)
             if self.move(target_square, game):
                 self.has_moved = True
-                game.capture_piece(piece_to_capture)
                 game.toggle_turn()
+            
+            else:
+                game.piece_list.append(piece_to_capture)
 
         # Castling
         elif self.valid_move(target_square, game) == 3:
@@ -190,6 +193,7 @@ class Piece():
     def move(self, target_square, game):
         """
         """
+        self.check_check_mate(game)
         starting_occupant = game.tiles[target_square.tile_number].occupant
         starting_tile_number = self.tile_number
 
@@ -197,11 +201,13 @@ class Piece():
         self.tile_number = target_square.tile_number
         game.tiles[self.tile_number].occupant = self
         if game.check(game.player_turn):
+            game.tiles[self.tile_number].occupant = None
             game.tiles[starting_tile_number].occupant = self
             self.tile_number = starting_tile_number
             game.tiles[self.tile_number].occupant = starting_occupant
             movement.drag_piece((game.tiles[starting_tile_number].tile_x + 30, game.tiles[starting_tile_number].tile_y + 30), 
                 self)
+            print("nah")
             return False
 
         else:
@@ -209,3 +215,27 @@ class Piece():
                             self)
             return True
 
+    def check_check_mate(self, game):
+        """
+        """
+        moves_available = 0
+        
+        print("BLACK: ", game.get_attacked_squares((0,0,0)))
+        print("WHITE: ", game.get_attacked_squares((255,255,255)))
+        for square in game.get_attacked_squares(game.player_turn):
+            starting_occupant = game.tiles[square].occupant
+            starting_tile_number = self.tile_number
+
+            game.tiles[starting_tile_number].occupant = None
+            self.tile_number = square
+            game.tiles[self.tile_number].occupant = self
+            if not game.check(game.player_turn):
+                moves_available += 1
+
+            game.tiles[self.tile_number].occupant = None
+            game.tiles[starting_tile_number].occupant = self
+            self.tile_number = starting_tile_number
+            game.tiles[self.tile_number].occupant = starting_occupant
+        
+        print(moves_available)
+        # return moves_available
