@@ -85,7 +85,6 @@ class Piece():
                                     game.tiles[self.tile_number].tile_y + 30),
                                     self)
 
-        
         game.update_occupied_squares()
 
     def pawn_specific(self, target_square, game):
@@ -193,7 +192,6 @@ class Piece():
     def move(self, target_square, game):
         """
         """
-        self.check_check_mate(game)
         starting_occupant = game.tiles[target_square.tile_number].occupant
         starting_tile_number = self.tile_number
 
@@ -214,28 +212,3 @@ class Piece():
             movement.drag_piece((target_square.tile_x + 30, target_square.tile_y + 30), 
                             self)
             return True
-
-    def check_check_mate(self, game):
-        """
-        """
-        moves_available = 0
-        
-        print("BLACK: ", game.get_attacked_squares((0,0,0)))
-        print("WHITE: ", game.get_attacked_squares((255,255,255)))
-        for square in game.get_attacked_squares(game.player_turn):
-            starting_occupant = game.tiles[square].occupant
-            starting_tile_number = self.tile_number
-
-            game.tiles[starting_tile_number].occupant = None
-            self.tile_number = square
-            game.tiles[self.tile_number].occupant = self
-            if not game.check(game.player_turn):
-                moves_available += 1
-
-            game.tiles[self.tile_number].occupant = None
-            game.tiles[starting_tile_number].occupant = self
-            self.tile_number = starting_tile_number
-            game.tiles[self.tile_number].occupant = starting_occupant
-        
-        print(moves_available)
-        # return moves_available

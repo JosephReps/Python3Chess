@@ -1,6 +1,7 @@
 '''
 Behaviour and attributes unique to Pawn pieces.
 '''
+# NEED TO CHANGE TO DEAL W/ ATTACKED SQ
 import piece
 
 BLACK = (0,0,0)
@@ -91,15 +92,15 @@ class Pawn(piece.Piece):
         elif 64 < self.tile_number + tile_direction or \
                     self.tile_number + tile_direction < 0:          
             return
-
-        if abs(tile_direction) == 8:
-            if not game.tiles[self.tile_number + tile_direction].occupant:
-                potential_moves.append(self.tile_number + tile_direction)
+        
+        if target_square:
+            if abs(tile_direction) == 8:
+                if not game.tiles[self.tile_number + tile_direction].occupant:
+                    potential_moves.append(self.tile_number + tile_direction)
 
         elif game.tiles[self.tile_number + tile_direction].occupant:
             if game.tiles[self.tile_number + tile_direction].occupant.colour != self.colour:
                 potential_moves.append(self.tile_number + tile_direction)
-        
         
         elif self.tile_number + tile_direction in game.en_passent_tiles.keys():
             potential_moves.append(self.tile_number + tile_direction)

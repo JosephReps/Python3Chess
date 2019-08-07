@@ -176,6 +176,7 @@ class PyChess():
             self.player_turn = (0,0,0)
         else:
             self.player_turn = (255,255,255)
+        # self.check_check_mate()
 
     def check(self, colour):
         """
@@ -201,6 +202,32 @@ class PyChess():
         """
         attacked_squares = set([square for piece in self.piece_list for square in piece.valid_move(None, self) if piece.colour == colour])
         return list(attacked_squares)
+
+    # def check_check_mate(self):
+    #     """
+    #     """
+    #     moves_available = 0
+        
+    #     for piece in self.piece_list:
+    #         if piece.colour == (self.player_turn):
+    #             print(piece.valid_move(None, self))
+    #             for square in piece.valid_move(None, self):
+    #                 starting_occupant = self.tiles[square].occupant
+    #                 starting_tile_number = piece.tile_number
+        
+    #                 self.tiles[starting_tile_number].occupant = None
+    #                 piece.tile_number = square
+    #                 self.tiles[piece.tile_number].occupant = piece
+    #                 if not self.check(self.player_turn):
+    #                     moves_available += 1
+        
+    #                 self.tiles[piece.tile_number].occupant = None
+    #                 self.tiles[starting_tile_number].occupant = piece
+    #                 piece.tile_number = starting_tile_number
+    #                 self.tiles[piece.tile_number].occupant = starting_occupant
+
+    #     print(moves_available)
+    #     # return moves_available
 
     def check_mate(self):
         """
